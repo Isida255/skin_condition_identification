@@ -12,7 +12,7 @@ from kafka import KafkaConsumer
 from urllib.request import Request, urlopen
 
 #Set variables
-mongodburi = "mongodb+srv://DSE_6000:DSE_6000@cluster0.jqvg6.mongodb.net/AIDB.Test"
+mongodburi = "mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/client.test"
 topic = "userdetails"
 
 my_spark = SparkSession.builder.master("local[*]").appName("myApp") \
@@ -92,16 +92,16 @@ if __name__ == "__main__":
 
     #Json load test
 
-    # x = '{ "_id":"Gary","username":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":""}'
-    # y = json.loads(x)
-    # write_json(y)
+    x = '{ "_id":"Gary","username":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":""}'
+    y = json.loads(x)
+    write_json(y)
 
 
     #update test
 
-    x_updated = '{"_id":"Gary","userid":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":"This doesnot look like melanoma probably"}'
-    y_updated = json.loads(x_updated)
-    update_results(y_updated)
+    # x_updated = '{"_id":"Gary","userid":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":"This doesnot look like melanoma probably"}'
+    # y_updated = json.loads(x_updated)
+    # update_results(y_updated)
 
 
     #read test
@@ -112,4 +112,4 @@ if __name__ == "__main__":
 
 
     #result fetch test passing user id
-    resultread('dave')
+    # resultread('dave')
