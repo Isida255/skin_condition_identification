@@ -54,15 +54,6 @@ def update_results(jsonval):
     jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").option("replaceDocument", "false").save()
     return ("write successful")
 
-def update_result(id,results):
-
-    # convert into RDD
-    rdd = spark.sparkContext.parallelize([jsonval])
-
-    # create a Dataframe
-    jsonDF = spark.read.json(rdd)
-    jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").option("replaceDocument", "false").save()
-    return ("write successful")
 
 #function to send the user json as a message for the topic"new_user"
 def userdetails_producer(topic,message):
