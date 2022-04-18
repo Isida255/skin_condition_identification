@@ -1,19 +1,24 @@
 # program to write (insert/upsert) JSON to MongoDB using Spark
+#program used confluent for cloud kafka services
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark.sql import SQLContext
 import requests
-import json
 from pyspark.sql import functions as F
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
 from urllib.request import Request, urlopen
+from confluent_kafka import Producer
+import socket
+import json
+import base64
+from pyspark.sql.types import IntegerType,BooleanType,DateType
 
 #Set variables
 mongodburi = "mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/client.test"
-topic = "userdetails"
+topic = "new_user"
 
 my_spark = SparkSession.builder.master("local[*]").appName("myApp") \
     .config("spark.mongodb.input.uri", mongodburi) \
@@ -24,24 +29,6 @@ my_spark = SparkSession.builder.master("local[*]").appName("myApp") \
 spark = SparkSession.builder.appName("Python Spark Mongo DB write").getOrCreate()
 logger = spark._jvm.org.apache.log4j
 logger.LogManager.getRootLogger().setLevel(logger.Level.FATAL)
-
-
-#Function to fetch json from provided url and insert into mongodb
-def write_db(url):
-    # Online data source
-    onlineData = url
-
-    # read the online data file
-    httpData = urlopen(onlineData).read().decode('utf-8')
-    print(httpData)
-    # convert into RDD
-    rdd = spark.sparkContext.parallelize([httpData])
-
-    # create a Dataframe
-    jsonDF = spark.read.json(rdd)
-    jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").save()
-
-    return("write successful")
 
 #writes the input json value to db
 def write_json(jsonval):
@@ -67,34 +54,53 @@ def update_results(jsonval):
     jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").option("replaceDocument", "false").save()
     return ("write successful")
 
-def userdetails_producer(topic,message):
-    producer = KafkaProducer(bootstrap_servers=
-                             ['localhost:29092'], value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-    future = producer.send(topic, message)  # r.json())
-    result = future.get(timeout=60)
-    # producer.flush('userdetails_producer')
-    return (result)
+def update_result(id,results):
 
+    # convert into RDD
+    rdd = spark.sparkContext.parallelize([jsonval])
+
+    # create a Dataframe
+    jsonDF = spark.read.json(rdd)
+    jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").option("replaceDocument", "false").save()
+    return ("write successful")
+
+#function to send the user json as a message for the topic"new_user"
+def userdetails_producer(topic,message):
+    conf = {'bootstrap.servers': 'pkc-6ojv2.us-west4.gcp.confluent.cloud:9092',
+            'security.protocol': 'SASL_SSL',
+            'sasl.mechanisms': 'PLAIN',
+            'sasl.username': '75JYP7BH76CYFKC7',
+            'sasl.password': 'rRErWkw8ZmMR/A00IuODq0CXvCk/NYGB5rXaO9oc93162oWfCZ4f0kD8fE+Q9SJC'}
+
+    producer = Producer(conf)
+
+    x = message
+    y = json.dumps(x)
+
+    producer.produce('new_user', key="test", value=y)
+    producer.flush()
+
+    return ("success")
+
+#function to read the result data from mongodb for the _id provided"
 def resultread(var_userid):
-    userid = var_userid
     df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
     df.createOrReplaceTempView("temp")
-    result = spark.sql("SELECT  resulttext FROM temp WHERE userid = '{}'".format(userid))
-    result.show()
+    result = spark.sql("SELECT  results FROM temp WHERE _id = '{}'".format(var_userid))
+    print(result.collect()[0][0])
+    returnresult = result.collect()[0][0]
+    return(returnresult)
+
 
 
 if __name__ == "__main__":
 
-    #url test
-    # url = "http://127.0.0.1:5000/"
-    # write_db(url)
-
 
     #Json load test
 
-    x = '{ "_id":"Gary","username":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":""}'
-    y = json.loads(x)
-    write_json(y)
+    # x = '{ }'
+    # y = json.loads(x)
+    #write_json(y)
 
 
     #update test
@@ -105,11 +111,4 @@ if __name__ == "__main__":
 
 
     #read test
-    # df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
-    # df.createOrReplaceTempView("temp")
-    # result = spark.sql("SELECT  resulttext FROM temp WHERE userid = 'dave'")
-    # result.show()
-
-
-    #result fetch test passing user id
-    # resultread('dave')
+    print(resultread('isidaTest@outlook.com2022-04-17 15:55:41.431155'))
