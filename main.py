@@ -8,8 +8,9 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import json
 #import spark_clouddb
-from spark_clouddb import write_json
+#from spark_clouddb import write_json
 #from PIL import Image
+from spark_clouddb_updated import write_json, resultread
 
 # mongoengine.connect(db='SkinConditionIdentification',
 #                   host='mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/SkinConditionIdentification?retryWrites=true&w=majority')
@@ -59,7 +60,8 @@ def upload_file1():
 
         # now = current_time_millis()
         date = datetime.now()
-        json_to_load = {"_id": username + "{}".format(date, "%m/%d/%Y,%H:%M:%S"),
+        id = username + "{}".format(date, "%m/%d/%Y,%H:%M:%S")
+        json_to_load = {"_id": id,
                         "username": username,
                         "image": image_base64,
                         "image_name": name,
@@ -70,7 +72,7 @@ def upload_file1():
 
         # response = requests.post( json=image_payload_body, headers=request_headers)
         #return jsonify(json_to_load)
-        return 'file uploaded successfully'
+        return resultread("isidaTest@outlook.com2022-04-17 15:55:41.431155")
 
 
 if __name__ == '__main__':
