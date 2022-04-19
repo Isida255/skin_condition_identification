@@ -1,5 +1,8 @@
 # program to write (insert/upsert) JSON to MongoDB using Spark
 #program used confluent for cloud kafka services
+import findspark
+findspark.init()
+
 from pyspark import SparkConf
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
