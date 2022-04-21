@@ -10,7 +10,8 @@ import json
 #import spark_clouddb
 #from spark_clouddb import write_json
 #from PIL import Image
-from spark_clouddb_updated import write_json, resultread
+#from spark_clouddb_updated import write_json, resultread
+from spark_clouddb import write_json, resultread
 
 # mongoengine.connect(db='SkinConditionIdentification',
 #                   host='mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/SkinConditionIdentification?retryWrites=true&w=majority')
@@ -43,7 +44,8 @@ def upload_file1():
         # As we need to get the provided python file,
         # comparing here like this
         name = f.filename
-        image_path = os.path.abspath(os.path.join(root, name))
+        #image_path = os.path.abspath(os.path.join(root, name))
+        image_path = os.path.abspath(name)
         # image_path = r'C:\Users\isida\PycharmProjects\FinalProjecttest2\ISIC_0024339.jpg'
 
         request_headers = {
