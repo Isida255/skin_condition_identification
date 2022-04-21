@@ -10,8 +10,8 @@ from pyspark.sql.types import *
 from pyspark.sql import SQLContext
 import requests
 from pyspark.sql import functions as F
-from kafka import KafkaProducer
-from kafka import KafkaConsumer
+#from kafka import KafkaProducer
+#from kafka import KafkaConsumer
 from urllib.request import Request, urlopen
 from confluent_kafka import Producer
 import socket
