@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Benign or Malignant</h1>
+<p class="comment">Upload an image to detect if a skin lesion is malignant.</p>
+<dive class="col-xs-6">
+    <form action="/upload" id="upload-file" method="post" enctype="multipart/form-data">
+        <p class="comment">Select image to upload and press Detect:</p>
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" name="file" id="customFile">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+
+        </div>
+
+        <div>
+            <input type="submit" class="btn btn-success" id="btn-predict" value="Detect" />
+        </div>
+    </form>
+
+
+
+</dive>
+{% endblock %}
