@@ -63,7 +63,7 @@ def model_predict(img):
     img_data = encode(img)
     result = {"class":pred_class, "probs":pred_probs, "image":img_data}
     # write the image in mongo
-    userinfo = {"name": "test1", "image": img_data, "result": "test result- update this with the result variable"}
+    userinfo = {"name": "test1", "image": img_data, "result":  str(result) }
     x = mycol.insert_one(userinfo)
 
     # writing done
