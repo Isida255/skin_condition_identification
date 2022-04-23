@@ -7,11 +7,4 @@ fastai==1.0.57
 Flask-RESTful
 Werkzeug
 requests
-spark
-pyspark
-findspark
-pykafka
-kafka-python
-confluent-kafka
-confluent_kafka
 Jinja2
