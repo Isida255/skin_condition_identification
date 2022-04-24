@@ -6,6 +6,7 @@ RUN apt update && \
 WORKDIR app 
 # Install pytorch cpu version
 RUN pip install torch_nightly -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html
+RUN python -m pip install pymongo[srv]
 
 ADD requirements.txt .
 RUN pip install -r requirements.txt

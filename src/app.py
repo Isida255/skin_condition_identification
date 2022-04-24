@@ -7,6 +7,7 @@ from pathlib import Path
 from io import BytesIO
 import base64
 import requests
+import pymongo
 
 # Import fast.ai Library
 from fastai import *
@@ -23,6 +24,13 @@ NAME_OF_FILE = 'model_best' # Name of your exported file
 PATH_TO_MODELS_DIR = Path('') # by default just use /models in root dir
 classes = ['Actinic keratoses', 'Basal cell carcinoma', 'Benign keratosis',
            'Dermatofibroma', 'Melanocytic nevi', 'Melanoma', 'Vascular lesions']
+
+#Pymongo config
+
+myclient = pymongo.MongoClient("mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/SkinConditionIdentification?retryWrites=true&w=majority")
+#db = client.test
+mydb = myclient["SkinConditionIdentification"]
+mycol = mydb["UserInformation"]
 
 def setup_model_pth(path_to_pth_file, learner_name_to_load, classes):
     data = ImageDataBunch.single_from_classes(
@@ -52,6 +60,12 @@ def model_predict(img):
 	
     img_data = encode(img)
     result = {"class":pred_class, "probs":pred_probs, "image":img_data}
+
+    # write the image in mongo
+    userinfo = {"name": "test2", "image": img_data, "result":  str(result) }
+    x = mycol.insert_one(userinfo)
+
+    # writing done
     return render_template('result.html', result=result)
    
 
