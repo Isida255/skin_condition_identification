@@ -85,6 +85,23 @@ def resultread(var_userid):
     returnresult = result.collect()[0][0]
     return(returnresult)
 
+#function to read the entire data from database
+def resultread_total():
+    df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
+    df.createOrReplaceTempView("temp")
+    result = spark.sql("SELECT  * FROM temp")
+    print(result.collect())
+    print(result)
+    returnresult = result.collect()
+    return(result)
+
+#function to read the entire data from database for given user id
+def result_byuser(var_userid):
+    df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
+    df.createOrReplaceTempView("temp")
+    result = spark.sql("SELECT  * FROM temp WHERE _id = '{}'".format(var_userid))
+    print(result)
+    return(result)
 
 
 if __name__ == "__main__":
