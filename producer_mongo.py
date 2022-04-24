@@ -39,6 +39,7 @@ if __name__ == "__main__":
                 'security.protocol': 'SASL_SSL',
                 'sasl.mechanisms': 'PLAIN',
                 'sasl.username': '75JYP7BH76CYFKC7',
+                'message.max.bytes':8388608,
                 'sasl.password': 'rRErWkw8ZmMR/A00IuODq0CXvCk/NYGB5rXaO9oc93162oWfCZ4f0kD8fE+Q9SJC'}
 
         producer = Producer(conf)
