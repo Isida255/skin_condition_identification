@@ -61,8 +61,11 @@ def model_predict(img):
     img_data = encode(img)
     result = {"class":pred_class, "probs":pred_probs, "image":img_data}
 
+    final_result = {"class":pred_class, "probs":pred_probs}
+    date = datetime.now()
+	
     # write the image in mongo
-    userinfo = {"name": "test2", "image": img_data, "result":  str(result) }
+    userinfo = {"_id": username +"{}".format(date, "%m/%d/%Y,%H:%M:%S"), "username": str(username), "image": img_data, "image_name": img_name, "result":  str(final_result), "uploadDate": format(date, "%m/%d/%Y,%H:%M:%S")}
     x = mycol.insert_one(userinfo)
 
     # writing done
@@ -80,9 +83,13 @@ def upload():
     if request.method == 'POST':
         # Get the file from post request
         img = request.files['file'].read()
+	username = request.form['email']
+        f = request.files['file']
+        img_name = f.filename
+	
         if img != None:
         # Make prediction
-            preds = model_predict(img)
+            preds = model_predict(img, username, img_name)
             return preds
     return 'OK'
 	
