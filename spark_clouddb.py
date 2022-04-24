@@ -20,7 +20,7 @@ import base64
 from pyspark.sql.types import IntegerType,BooleanType,DateType
 
 #Set variables
-mongodburi = "mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/client.test"
+mongodburi = "mongodb+srv://admin:testAdmin@cluster0.k5ld4.mongodb.net/SkinConditionIdentification.UserInformation"
 topic = "new_user"
 
 my_spark = SparkSession.builder.master("local[*]").appName("myApp") \
@@ -42,7 +42,7 @@ def write_json(jsonval):
     # create a Dataframe
     jsonDF = spark.read.json(rdd)
     jsonDF.write.format('com.mongodb.spark.sql.DefaultSource').mode("append").save()
-    userdetails_producer(topic, jsonval)
+    #userdetails_producer(topic, jsonval)
     return ("write successful")
 
 #writes the upsert json value in db
@@ -89,11 +89,11 @@ def resultread(var_userid):
 def resultread_total():
     df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
     df.createOrReplaceTempView("temp")
-    result = spark.sql("SELECT  * FROM temp")
+    result = spark.sql("SELECT username, image_name,result, uploadDate FROM temp")
     print(result.collect())
     print(result)
     returnresult = result.collect()
-    return(result)
+    return(returnresult)
 
 #function to read the entire data from database for given user id
 def result_byuser(var_userid):
@@ -103,23 +103,26 @@ def result_byuser(var_userid):
     print(result)
     return(result)
 
+def resultread_total_grouped():
+        df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
+        df.createOrReplaceTempView("temp")
+        result = spark.sql("SELECT count(*) as totalInsterted, username FROM temp group by username")
+        #print(result.collect())
+        #print(result)
+        returnresult = result.collect()
+        return(returnresult)
+
+#function to read the entire data from database for given username
+def result_byusername(var_username):
+    df = spark.read.format('com.mongodb.spark.sql.DefaultSource').load()
+    df.createOrReplaceTempView("temp")
+    result = spark.sql("SELECT username, image_name,result, uploadDate FROM temp WHERE username = '{}'".format(var_username))
+    #print(result.collect())
+    #print(result)
+    returnresult = result.collect()
+    return(returnresult)
+
+
 
 if __name__ == "__main__":
-
-
-    #Json load test
-
-    # x = '{ }'
-    # y = json.loads(x)
-    #write_json(y)
-
-
-    #update test
-
-    # x_updated = '{"_id":"Gary","userid":"Gary", "age":30, "city":"New York","photo":"/Users/giridharangovindan/PycharmProjects/finalprojectPHOTO.jpg","resulttext":"This doesnot look like melanoma probably"}'
-    # y_updated = json.loads(x_updated)
-    # update_results(y_updated)
-
-
-    #read test
-    print(resultread('isidaTest@outlook.com2022-04-17 15:55:41.431155'))
+   print(result_byusername('isidaTest@outlook.com'))
