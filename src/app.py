@@ -7,6 +7,7 @@ from pathlib import Path
 from io import BytesIO
 import base64
 import requests
+from datetime import datetime
 import pymongo
 
 # Import fast.ai Library
@@ -46,9 +47,11 @@ def encode(img):
     pil_img = PILImage.fromarray(img)
     buff = BytesIO()
     pil_img.save(buff, format="JPEG")
+
+
     return base64.b64encode(buff.getvalue()).decode("utf-8")
 	
-def model_predict(img):
+def model_predict(img, username, img_name):
     img = open_image(BytesIO(img))
     pred_class,pred_idx,outputs = learn.predict(img)
     formatted_outputs = ["{:.1f}%".format(value) for value in [x * 100 for x in torch.nn.functional.softmax(outputs, dim=0)]]
@@ -60,10 +63,8 @@ def model_predict(img):
 	
     img_data = encode(img)
     result = {"class":pred_class, "probs":pred_probs, "image":img_data}
-
     final_result = {"class":pred_class, "probs":pred_probs}
     date = datetime.now()
-	
     # write the image in mongo
     userinfo = {"_id": username +"{}".format(date, "%m/%d/%Y,%H:%M:%S"), "username": str(username), "image": img_data, "image_name": img_name, "result":  str(final_result), "uploadDate": format(date, "%m/%d/%Y,%H:%M:%S")}
     x = mycol.insert_one(userinfo)
@@ -83,10 +84,11 @@ def upload():
     if request.method == 'POST':
         # Get the file from post request
         img = request.files['file'].read()
-	username = request.form['email']
+        username = request.form['email']
         f = request.files['file']
         img_name = f.filename
-	
+        
+
         if img != None:
         # Make prediction
             preds = model_predict(img, username, img_name)
