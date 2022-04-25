@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>Skin Condition Identification Super User</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Skin Condition Identification.">
+
+
+
+<!--Link to Font Awesome icons-->
+<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.4.2/css/all.css' integrity='sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns' crossorigin='anonymous'>
+
+
+
+<!--Link to fonts from google fonts-->
+<link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+
+
+
+
+<style>
+html,body,h2,h3,h4,p,h5,li {font-family: sans-serif}
+</style>
+
+
+</head>
+
+
+
+
+<body class="bground-color">
+
+
+
+<!-- w3-content defines a container for fixed size centered content,
+and is wrapped around the whole page content. -->
+<div class="w3-content" style="max-width:1000px">
+
+
+
+<!-- 1. HOME PAGE -->
+<div class="tabbed w3-animate-opacity w3-white" id="home">
+
+
+
+
+
+
+<!-- Button -->
+<div id="btnn" class="w3-center">
+
+	<!--<input type = "submit" class="w3-btn w3-red w3-hover-green w3-square w3-margin-bottom adjust-spacing btn-font w3-padding w3-space-letters w3-text-black"><i class='fas fa-camera w3-padding-right' style='font-size:15px'></i>-->
+		  <form action = "http://localhost:5000/uploader" method = "POST"
+         enctype = "multipart/form-data">
+          <label>User Email:</label><br>
+          <input type = "email" name="email" required="required"/>
+
+         <input type = "submit"/>
+      </form>
+
+</div>
+
+	</div>
+	
+</div>
+</div>
+</body>
+</html>
